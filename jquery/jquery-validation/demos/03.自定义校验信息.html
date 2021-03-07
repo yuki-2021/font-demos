@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jquery-validatuon</title>
+    <!-- 1. 引入css -->
+    <link href="../css/cmxform.css" rel="stylesheet" type="text/css" />
+    <!-- 1. 引入jquery、jquery-validation、css-->
+    <script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.js"></script>
+    <script type="text/javascript" src="../js/additional-methods.js"></script>
+    <script type="text/javascript">
+        function validateByJs() {
+            $jqueryValidation.form();
+        }
+    </script>
+
+</head>
+<body>
+
+    <form id="mainForm" action="www.baidu.com" method="post" enctype="multipart/form-data">
+        <div>
+            <label>firstName</label>
+            <input type="text" name="firstName" />
+        </div>
+        <div>
+            <label>lastName</label>
+            <input type="text" name="lastName" />
+        </div>
+        <div>
+            <label>age</label>
+            <input type="text" name="age" />
+        </div>
+        <div>
+            <label>email</label>
+            <input type="text" name="email" />
+        </div>
+        <div>
+            <label>url</label>
+            <input type="text" name="url" />
+        </div>
+        <div>
+            <label>date</label>
+            <input type="text" name="date" />
+        </div>
+        <div>
+            <label>creditcard</label>
+            <input type="text" name="creditcard" />
+        </div>
+        <div>
+            <label>accept</label>
+            <input type="file" name="accept" />
+        </div>
+        <div>
+            <input type="button" value="js触发验证" onclick="validateByJs();">
+            <input type="submit" value="submit按钮触发验证">
+        </div>
+    </form>
+
+
+    <!--
+        1. jquery-validation在提示错误信息时候，使用的是英文。在如下情况下，你可能需要修改默认错误提示
+        - 希望显示中文
+        - 希望自定义错误信息
+
+       有如下三种方式
+            1. 针对特定field提供错误信息 - jquery.validation.validae() 方法中 - 同时提供rules和message
+            2. 针对所有字段，设置默认错误信息 - $.extend($.validator.messages,{xxx})
+            3. 针对所有字段 - 直接引入 jquery-validation 针对不同语言提供的语言包
+    -->
+
+
+    <script type="text/javascript">
+        let $form = $("#mainForm");
+
+        /*
+        *  全局 - 设置错误信息 - $.extend($.validator.messages,{xxx})
+        *
+        * */
+        $.extend($.validator.messages, {
+            required: "这是必填字段",
+            remote: "请修正此字段",
+            email: "请输入有效的电子邮件地址",
+            url: "请输入有效的网址",
+            date: "请输入有效的日期",
+            dateISO: "请输入有效的日期 (YYYY-MM-DD)",
+            number: "请输入有效的数字",
+            digits: "只能输入数字",
+            creditcard: "请输入有效的信用卡号码",
+            equalTo: "你的输入不相同",
+            extension: "请输入有效的后缀",
+            maxlength: $.validator.format("最多可以输入 {0} 个字符"),
+            minlength: $.validator.format("最少要输入 {0} 个字符"),
+            rangelength: $.validator.format("请输入长度在 {0} 到 {1} 之间的字符串"),
+            range: $.validator.format("请输入范围在 {0} 到 {1} 之间的数值"),
+            max: $.validator.format("请输入不大于 {0} 的数值"),
+            min: $.validator.format("请输入不小于 {0} 的数值")
+        });
+
+
+        /*
+        * 针对特定字段 - 同时给validate() 提供 messages和rules
+        * */
+        let $jqueryValidation = $form.validate({
+            rules:{
+                firstName: {
+                    required: true,
+                    maxlength: 7,
+                    minlength: 5
+                },
+                lastName: {
+                    required: true,
+                    rangelength: [5,7]
+                },
+                age: {
+                    required: true,
+                    digits: true,
+                    max:100,
+                    min: 18
+                },
+                "email":{
+                    email: true
+                },
+                "url": {
+                    url: true
+                },
+                "date": {
+                    date: true
+                },
+                "creditcard":{
+                    creditcard:true
+                },
+                accept: {
+                    accept: [".jpg",".png"]
+                }
+            },
+            messages: {
+                firstName: {
+                    required: "用户名称不能为空a"
+                }
+            }
+        })
+
+        /*
+        * 直接引入 - jquery-validation提供的语言包
+        * */
+    </script>
+    <script type="text/javascript" src="../js/localization/messages_zh.js" />
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>jquery-validatuon</title>
+    <!-- 1. 引入css -->
+    <link href="../css/cmxform.css" rel="stylesheet" type="text/css" />
+    <!-- 1. 引入jquery、jquery-validation、css-->
+    <script type="text/javascript" src="../js/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="../js/jquery.validate.js"></script>
+    <script type="text/javascript" src="../js/additional-methods.js"></script>
+    <script type="text/javascript" src="../js/localization/messages_zh.js.js"></script>
+    <script type="text/javascript">
+        function validateByJs() {
+            $jqueryValidation.form();
+        }
+    </script>
+
+    <!-- 更改错误样式-->
+    <style type="text/css">
+        input.error { border: 1px solid red; }
+        label.error {
+            background:url("./demo/images/unchecked.gif") no-repeat 0px 0px;
+
+            padding-left: 16px;
+
+            padding-bottom: 2px;
+
+            font-weight: bold;
+
+            color: #EA5200;
+        }
+        label.checked {
+           color: #1eaec9;
+        }
+    </style>
+
+
+</head>
+<body>
+
+    <form id="mainForm" action="www.baidu.com" method="post" enctype="multipart/form-data">
+        <div class="error"></div>
+        <div>
+            <label>firstName</label>
+            <input type="text" name="firstName"/>
+        </div>
+        <div>
+            <input type="button" value="js触发验证" onclick="$jqueryValidation.form();">
+            <input type="submit" value="submit按钮触发验证">
+        </div>
+    </form>
+
+
+
+    <!--
+        错误显示规则
+            - 是否有errorContainer ，有就统一显示错误
+            - 在input后面添加errorElement,类是errorClass
+
+        默认值如下
+        errorElement - label
+        errorClass   - error
+        errorContainer - 同一显示错误信息的地方 - 默认无
+        errorlabelcontainer - 显示错误信息的容器 - 默认无
+        wrapper            - 用什么把errorElement抱起来 - 默认无
+
+
+       1. 自定义错误样式
+             input.error
+             label.error
+             .error
+
+
+        2. 统一显示错误
+            errorContainer: "div.error",
+            errorLabelContainer: $("#signupForm div.error"),
+            wrapper: "li",
+
+        3. errorPlacement - 更改错误位置
+
+
+        4. 设置验证ok
+           - 设置jQuery.validator.setDefault()的success回调。
+           - 验证成功，执行success回调。
+           - 回调中，设置给label设置successClass和successContent就可以
+    -->
+
+    <script type="text/javascript">
+        let $form = $("#mainForm");
+
+
+
+        $.validator.setDefaults({
+            // 统一显示错误
+            // 一般这三个属性同时使用，实现在一个容器内显示所有错误提示的功能
+            errorContainer: "div.error",
+            errorLabelContainer: $("#signupForm div.error"),
+            wrapper: "li",
+            // 更改错误位置
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent());
+            },
+            // 定义成功样式
+            success: function(label) {
+                alert("hello")
+                // set &nbsp; as text for IE
+                label.html("符合规则").addClass("checked");
+            },
+            // 针对submit按钮 -> 只验证、不提交 - true
+            debug:true,
+            // 针对submit按钮 -> 不提交表单，执行function(){} -> 可以在function中提交
+            submitHandler: function(form) { alert("提交事件!");},
+            // 忽略某些字段 -> 字段class是"ignore"
+            ignore: ".ignore",
+            onsubmit: true,
+            // 失去焦点，是否验证
+            onfocusout:true,
+            // keyUp后，是否验证
+            onkeyup:true,
+            // 点击submit，是否验证
+            onclick:true
+        })
+
+
+        let $jqueryValidation = $form.validate({
+            rules: {
+                firstName: "required",
+            }
+        })
+
+
+    </script>
+
+</body>
+</html>
